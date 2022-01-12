@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -17,8 +19,9 @@ import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
   
-  private final CANSparkMax frontLeft, frontRight, backLeft, backRight;
-  private final CANEncoder leftEncoder, rightEncoder;
+  //private final CANSparkMax frontLeft, frontRight, backLeft, backRight;
+  private final WPI_TalonFX frontLeft, frontRight, backLeft, backRight;
+  //private final CANEncoder leftEncoder, rightEncoder;
   private final AHRS nav;
 
   private final DifferentialDrive diffDrive;
@@ -28,7 +31,7 @@ public class Drive extends SubsystemBase {
   public Drive() {
 
     // configuration
-    frontLeft = new CANSparkMax(Constants.kDrive.FRONT_LEFT_ID, Constants.kDrive.MOTOR_TYPE);
+    /*frontLeft = new CANSparkMax(Constants.kDrive.FRONT_LEFT_ID, Constants.kDrive.MOTOR_TYPE);
     frontRight = new CANSparkMax(Constants.kDrive.FRONT_RIGHT_ID, Constants.kDrive.MOTOR_TYPE);
     backLeft = new CANSparkMax(Constants.kDrive.BACK_LEFT_ID, Constants.kDrive.MOTOR_TYPE);
     backRight = new CANSparkMax(Constants.kDrive.BACK_RIGHT_ID, Constants.kDrive.MOTOR_TYPE);
@@ -40,10 +43,29 @@ public class Drive extends SubsystemBase {
 
     backLeft.follow(frontLeft);
     backRight.follow(frontRight);
-    diffDrive = new DifferentialDrive(frontLeft, frontRight);
 
     leftEncoder = frontLeft.getEncoder();
-    rightEncoder = frontRight.getEncoder();
+    rightEncoder = frontRight.getEncoder();*/
+
+    frontLeft = new WPI_TalonFX(Constants.kDrive.FRONT_LEFT_ID);
+    frontRight = new WPI_TalonFX(Constants.kDrive.FRONT_RIGHT_ID);
+    backLeft = new WPI_TalonFX(Constants.kDrive.BACK_LEFT_ID);
+    backRight = new WPI_TalonFX(Constants.kDrive.BACK_RIGHT_ID);
+
+    frontLeft.configFactoryDefault();
+    frontRight.configFactoryDefault();
+    backLeft.configFactoryDefault();
+    backRight.configFactoryDefault();
+
+    frontLeft.setInverted(TalonFXInvertType.Clockwise);
+    frontRight.setInverted(TalonFXInvertType.CounterClockwise);
+    backLeft.setInverted(TalonFXInvertType.Clockwise);
+    backRight.setInverted(TalonFXInvertType.CounterClockwise);
+
+    backLeft.follow(frontLeft);
+    backRight.follow(frontRight); 
+    
+    diffDrive = new DifferentialDrive(frontLeft, frontRight);
     resetEncoders();
 
     nav = new AHRS(SPI.Port.kMXP);
@@ -56,8 +78,10 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     odometry.update(nav.getRotation2d(), 
-                    leftEncoder.getPosition(), 
-                    rightEncoder.getPosition());
+                    /*leftEncoder.getPosition(), 
+                    rightEncoder.getPosition());*/
+                    frontLeft.getSelectedSensorPosition(),
+                    frontRight.getSelectedSensorPosition());
   }
 
   @Override
@@ -72,7 +96,8 @@ public class Drive extends SubsystemBase {
 
   // return current wheel speeds
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+    //return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+    return new DifferentialDriveWheelSpeeds(frontLeft.getSelectedSensorVelocity(), frontRight.getSelectedSensorVelocity());
   }
 
   // reset odometry to given pose
@@ -83,8 +108,10 @@ public class Drive extends SubsystemBase {
 
   // zero encoders
   public void resetEncoders() {
-    leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);
+    /*leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);*/
+    frontLeft.setSelectedSensorPosition(0);
+    frontRight.setSelectedSensorPosition(0);
   }
 
   // we might have to make sure setVoltage works the way we expect it to
@@ -95,16 +122,17 @@ public class Drive extends SubsystemBase {
   }
 
   public double getAverageEncoderDistance() {
-    return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
+    //return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
+    return (frontLeft.getSelectedSensorPosition() + frontRight.getSelectedSensorPosition()) / 2.0;
   }
 
-  public CANEncoder getLeftEncoder() {
+  /*public CANEncoder getLeftEncoder() {
     return leftEncoder;
   }
 
   public CANEncoder getRightEncoder() {
     return rightEncoder;
-  }
+  }*/
 
   // scales maximum drive speed (0 to 1.0)
   public void setMaxOutput(double maxOutput) {
