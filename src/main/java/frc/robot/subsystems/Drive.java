@@ -7,9 +7,10 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
+// import com.revrobotics.CANEncoder;
+// import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -66,13 +67,13 @@ public class Drive extends SubsystemBase {
     backRight.follow(frontRight); 
     
     diffDrive = new DifferentialDrive(frontLeft, frontRight);
-    resetEncoders();
 
     nav = new AHRS(SPI.Port.kMXP);
     nav.reset();
 
     // odometry stuff
     odometry = new DifferentialDriveOdometry(nav.getRotation2d());
+    resetOdometry(new Pose2d());
   }
 
   @Override
@@ -80,8 +81,13 @@ public class Drive extends SubsystemBase {
     odometry.update(nav.getRotation2d(), 
                     /*leftEncoder.getPosition(), 
                     rightEncoder.getPosition());*/
-                    frontLeft.getSelectedSensorPosition(),
-                    frontRight.getSelectedSensorPosition());
+                    frontLeft.getSelectedSensorPosition() / 2048 * 0.4788,
+                    frontRight.getSelectedSensorPosition() / 2048 * 0.4788);
+
+    SmartDashboard.putNumber("gyro output", nav.getAngle());
+    SmartDashboard.putNumber("odometry x", odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("odometry y", odometry.getPoseMeters().getY());
+    
   }
 
   @Override

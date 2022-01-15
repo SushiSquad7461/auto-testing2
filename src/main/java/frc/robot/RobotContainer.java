@@ -18,6 +18,8 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -35,12 +37,21 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drive s_drive = new Drive();
 
+  private final Field2d field = new Field2d();
+
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
+  public Trajectory exampleTrajectory;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    SmartDashboard.putData("field", field);
     // Configure the button bindings
     configureButtonBindings();
+  }
+
+  public void updateRobotPose() {
+    field.setRobotPose(s_drive.getPose());
   }
 
   /**
@@ -76,7 +87,7 @@ public class RobotContainer {
         .addConstraint(autoVoltageConstraint);
 
     // example trajectory
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    exampleTrajectory = TrajectoryGenerator.generateTrajectory(
       // start at origin
       new Pose2d(0, 0, new Rotation2d(0)),
       // make s curve
@@ -88,6 +99,7 @@ public class RobotContainer {
       new Pose2d(3, 0, new Rotation2d(0)),
       config
     );
+    field.getObject("traj").setTrajectory(exampleTrajectory);
 
     RamseteCommand ramseteCommand = new RamseteCommand(
       exampleTrajectory, 
