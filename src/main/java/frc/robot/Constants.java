@@ -27,9 +27,9 @@ public final class Constants {
         //public static final CANSparkMaxLowLevel.MotorType MOTOR_TYPE = CANSparkMaxLowLevel.MotorType.kBrushless;
 
         // pidf constants - find via characterization
-        public static final double ksVolts = .05513;
-        public static final double kvVoltSecondsPerMeter = .17459;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.0084919;
+        public static final double ksVolts = .5513;
+        public static final double kvVoltSecondsPerMeter = 1.7459;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.084919;
         // public static final double kPDriveVel = 1.6129;P
         public static final double kPDriveVel = 0;
         public static final double kMaxVoltage = 7;
