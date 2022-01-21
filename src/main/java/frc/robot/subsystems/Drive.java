@@ -81,8 +81,8 @@ public class Drive extends SubsystemBase {
     odometry.update(nav.getRotation2d(), 
                     /*leftEncoder.getPosition(), 
                     rightEncoder.getPosition());*/
-                    frontLeft.getSelectedSensorPosition() / 2048 * 0.4788 / 7.31,
-                    frontRight.getSelectedSensorPosition() / 2048 * 0.4788 / 7.31);
+                    frontLeft.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS,
+                    frontRight.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS);
 
     SmartDashboard.putNumber("gyro output", nav.getAngle());
     SmartDashboard.putNumber("odometry x", odometry.getPoseMeters().getX());

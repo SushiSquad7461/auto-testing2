@@ -22,7 +22,7 @@ public final class Constants {
         // motor constants
         public static final int FRONT_LEFT_ID = 1;
         public static final int FRONT_RIGHT_ID = 3;
-        public static final int BACK_LEFT_ID =2;
+        public static final int BACK_LEFT_ID = 2;
         public static final int BACK_RIGHT_ID = 4;
         //public static final CANSparkMaxLowLevel.MotorType MOTOR_TYPE = CANSparkMaxLowLevel.MotorType.kBrushless;
 
@@ -30,7 +30,7 @@ public final class Constants {
         public static final double ksVolts = .5513;
         public static final double kvVoltSecondsPerMeter = 1.7459;
         public static final double kaVoltSecondsSquaredPerMeter = 0.084919;
-        // public static final double kPDriveVel = 1.6129;P
+        // public static final double kPDriveVel = 1.6129;
         public static final double kPDriveVel = 0;
         public static final double kMaxVoltage = 7;
 
@@ -41,10 +41,13 @@ public final class Constants {
 
         // path-following constants
         public static final double kMaxSpeedMetersPerSecond = 3; // set to somewhat below free speed
-        //                                                          could increase this to go faster 
-        //                                                          theoretically
+                                                                 // could increase this to go faster 
+                                                                 // theoretically
         public static final double kMaxAccelerationMetersPerSecondSquared = 3; // doesn't really matter
 
+        // ticks to meters conversion factor
+        // (total ticks) * (motor rotations/tick) * (wheel rotations/motor rotations) * (meters/wheel rotations)
+        public static final double TICKS_TO_METERS = (1/2048) * (1/7.31) * (0.4788);
 
         // ramsete parameters
         public static final double kRamseteB = 2;

@@ -26,47 +26,27 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // subsystems
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drive s_drive = new Drive();
 
-  private final Field2d field = new Field2d();
-
+  // commands
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
+  // auto stuff
+  private final Field2d field = new Field2d();
   public Trajectory exampleTrajectory;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // put field object to dashboard
     SmartDashboard.putData("field", field);
-    // Configure the button bindings
+    
     configureButtonBindings();
   }
 
-  public void updateRobotPose() {
-    field.setRobotPose(s_drive.getPose());
-  }
-
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
   private void configureButtonBindings() {}
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
 
     // create voltage constraint
@@ -121,5 +101,9 @@ public class RobotContainer {
 
     return ramseteCommand.andThen(() -> s_drive.tankDriveVolts(0, 0));
 
+  }
+
+  public void updateRobotPose() {
+    field.setRobotPose(s_drive.getPose());
   }
 }
