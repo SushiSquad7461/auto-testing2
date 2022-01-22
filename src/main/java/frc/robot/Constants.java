@@ -47,7 +47,7 @@ public final class Constants {
 
         // ticks to meters conversion factor
         // (total ticks) * (motor rotations/tick) * (wheel rotations/motor rotations) * (meters/wheel rotations)
-        public static final double TICKS_TO_METERS = (1/2048) * (1/7.31) * (0.4788);
+        public static final double TICKS_TO_METERS = (1.0/2048.0) * (1.0/7.31) * (0.4788);
 
         // ramsete parameters
         public static final double kRamseteB = 2;
