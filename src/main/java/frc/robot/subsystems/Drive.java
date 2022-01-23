@@ -131,7 +131,7 @@ public class Drive extends SubsystemBase {
   // reset odometry to given pose
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    odometry.resetPosition(pose, nav.getRotation2d());
+    odometry.resetPosition(pose, new Rotation2d(-(nav.getYaw()-zeroOffset)));
   }
 
   // zero encoders
