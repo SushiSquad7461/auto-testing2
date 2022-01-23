@@ -45,6 +45,10 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  public Drive getDrive() {
+    return s_drive;
+  }
+
   private void configureButtonBindings() {}
 
   public Command getAutonomousCommand() {

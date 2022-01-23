@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
@@ -65,13 +66,18 @@ public class Drive extends SubsystemBase {
     backLeft.configFactoryDefault();
     backRight.configFactoryDefault();
 
-    frontLeft.setInverted(TalonFXInvertType.Clockwise);
-    frontRight.setInverted(TalonFXInvertType.CounterClockwise);
-    backLeft.setInverted(TalonFXInvertType.Clockwise);
-    backRight.setInverted(TalonFXInvertType.CounterClockwise);
+    frontLeft.setInverted(TalonFXInvertType.CounterClockwise);
+    frontRight.setInverted(TalonFXInvertType.Clockwise);
+    backLeft.setInverted(TalonFXInvertType.CounterClockwise);
+    backRight.setInverted(TalonFXInvertType.Clockwise);
 
     backLeft.follow(frontLeft);
     backRight.follow(frontRight); 
+
+    frontLeft.setNeutralMode(NeutralMode.Brake);
+    frontRight.setNeutralMode(NeutralMode.Brake);
+    backLeft.setNeutralMode(NeutralMode.Brake);
+    backRight.setNeutralMode(NeutralMode.Brake);
     
     diffDrive = new DifferentialDrive(frontLeft, frontRight);
 
@@ -91,14 +97,14 @@ public class Drive extends SubsystemBase {
       navZeroed = true;
     }
 
-    odometry.update( new Rotation2d(Math.toRadians(nav.getYaw() - zeroOffset)), 
+    odometry.update( new Rotation2d(Math.toRadians(-(nav.getYaw() - zeroOffset))), 
                     /*leftEncoder.getPosition(), 
                     rightEncoder.getPosition());*/
                     frontLeft.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS,
                     frontRight.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS);
 
                     // nav.reset();
-    SmartDashboard.putNumber("gyro output", nav.getYaw() - zeroOffset);
+    SmartDashboard.putNumber("gyro output", -(nav.getYaw() - zeroOffset));
     SmartDashboard.putNumber("zeroOffset", zeroOffset);
     SmartDashboard.putNumber("odometry x", odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("odometry y", odometry.getPoseMeters().getY());
@@ -139,7 +145,7 @@ public class Drive extends SubsystemBase {
   // we might have to make sure setVoltage works the way we expect it to
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     frontLeft.setVoltage(leftVolts);
-    frontRight.setVoltage(-rightVolts);
+    frontRight.setVoltage(rightVolts);
     diffDrive.feed();
   }
 
