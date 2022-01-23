@@ -7,11 +7,15 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
+
+import org.opencv.features2d.FlannBasedMatcher;
+
 // import com.revrobotics.CANEncoder;
 // import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.SPI;
@@ -25,8 +29,11 @@ public class Drive extends SubsystemBase {
   //private final CANEncoder leftEncoder, rightEncoder;
   private final AHRS nav;
 
+  private double zeroOffset = 5;
+
   private final DifferentialDrive diffDrive;
   private final DifferentialDriveOdometry odometry;
+  boolean navZeroed = false;
 
 
   public Drive() {
@@ -69,7 +76,8 @@ public class Drive extends SubsystemBase {
     diffDrive = new DifferentialDrive(frontLeft, frontRight);
 
     nav = new AHRS(SPI.Port.kMXP);
-    nav.reset();
+    nav.enableBoardlevelYawReset(false);
+    
 
     // odometry stuff
     odometry = new DifferentialDriveOdometry(nav.getRotation2d());
@@ -78,16 +86,24 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    odometry.update(nav.getRotation2d(), 
+    if (!nav.isCalibrating() && !navZeroed) {
+      zeroOffset = nav.getYaw();
+      navZeroed = true;
+    }
+
+    odometry.update( new Rotation2d(Math.toRadians(nav.getYaw() - zeroOffset)), 
                     /*leftEncoder.getPosition(), 
                     rightEncoder.getPosition());*/
                     frontLeft.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS,
                     frontRight.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS);
 
-    SmartDashboard.putNumber("gyro output", nav.getAngle());
+                    // nav.reset();
+    SmartDashboard.putNumber("gyro output", nav.getYaw() - zeroOffset);
+    SmartDashboard.putNumber("zeroOffset", zeroOffset);
     SmartDashboard.putNumber("odometry x", odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("odometry y", odometry.getPoseMeters().getY());
-    
+    SmartDashboard.putNumber("Encoder val ", frontLeft.getSelectedSensorPosition());
+    SmartDashboard.putBoolean("calb ", nav.isCalibrating());
   }
 
   @Override
