@@ -11,8 +11,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import org.opencv.features2d.FlannBasedMatcher;
 
-// import com.revrobotics.CANEncoder;
-// import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,37 +23,20 @@ import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
   
-  //private final CANSparkMax frontLeft, frontRight, backLeft, backRight;
   private final WPI_TalonFX frontLeft, frontRight, backLeft, backRight;
-  //private final CANEncoder leftEncoder, rightEncoder;
   private final AHRS nav;
 
-  private double zeroOffset = 5;
+  private double zeroOffset = 0; // navx has problems with zeroing, so we save the initial
+                                 //   heading at subsystem construction and subtract it
+                                 //   from the reported heading when we need to retrieve
 
   private final DifferentialDrive diffDrive;
   private final DifferentialDriveOdometry odometry;
   boolean navZeroed = false;
 
-
   public Drive() {
 
-    // configuration
-    /*frontLeft = new CANSparkMax(Constants.kDrive.FRONT_LEFT_ID, Constants.kDrive.MOTOR_TYPE);
-    frontRight = new CANSparkMax(Constants.kDrive.FRONT_RIGHT_ID, Constants.kDrive.MOTOR_TYPE);
-    backLeft = new CANSparkMax(Constants.kDrive.BACK_LEFT_ID, Constants.kDrive.MOTOR_TYPE);
-    backRight = new CANSparkMax(Constants.kDrive.BACK_RIGHT_ID, Constants.kDrive.MOTOR_TYPE);
-
-    frontLeft.restoreFactoryDefaults();
-    frontRight.restoreFactoryDefaults();
-    backLeft.restoreFactoryDefaults();
-    backRight.restoreFactoryDefaults();
-
-    backLeft.follow(frontLeft);
-    backRight.follow(frontRight);
-
-    leftEncoder = frontLeft.getEncoder();
-    rightEncoder = frontRight.getEncoder();*/
-
+    // motor setup and config
     frontLeft = new WPI_TalonFX(Constants.kDrive.FRONT_LEFT_ID);
     frontRight = new WPI_TalonFX(Constants.kDrive.FRONT_RIGHT_ID);
     backLeft = new WPI_TalonFX(Constants.kDrive.BACK_LEFT_ID);
@@ -82,8 +63,8 @@ public class Drive extends SubsystemBase {
     diffDrive = new DifferentialDrive(frontLeft, frontRight);
 
     nav = new AHRS(SPI.Port.kMXP);
-    nav.enableBoardlevelYawReset(false);
-    
+    nav.enableBoardlevelYawReset(false); // enables software-based reset for navx;
+                                         //   doesn't really work
 
     // odometry stuff
     odometry = new DifferentialDriveOdometry(nav.getRotation2d());
@@ -92,30 +73,26 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // once navx finishes calibrating and we haven't already set a zero offset
+    //   we set the offset to the current (initial) heading and set navZeroed
+    //   to true so we don't accidentally reset the offset during the match
     if (!nav.isCalibrating() && !navZeroed) {
       zeroOffset = nav.getYaw();
       navZeroed = true;
     }
 
-    odometry.update( new Rotation2d(Math.toRadians(-(nav.getYaw() - zeroOffset))), 
-                    /*leftEncoder.getPosition(), 
-                    rightEncoder.getPosition());*/
+    // the navx's positive direction is clockwise whereas wpilib's is counter-clockwise, so
+    //   we have to negate the output of getYaw
+    odometry.update(new Rotation2d(Math.toRadians(-(nav.getYaw() - zeroOffset))), 
                     frontLeft.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS,
                     frontRight.getSelectedSensorPosition() * Constants.kDrive.TICKS_TO_METERS);
 
-                    // nav.reset();
-    SmartDashboard.putNumber("gyro output", -(nav.getYaw() - zeroOffset));
-    SmartDashboard.putNumber("zeroOffset", zeroOffset);
+    SmartDashboard.putNumber("heading", -(nav.getYaw() - zeroOffset));
     SmartDashboard.putNumber("odometry x", odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("odometry y", odometry.getPoseMeters().getY());
-    SmartDashboard.putNumber("Encoder val ", frontLeft.getSelectedSensorPosition());
-    SmartDashboard.putBoolean("calb ", nav.isCalibrating());
-  }
+    SmartDashboard.putNumber("odometry y", odometry.getPoseMeters().getY());  }
 
   @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+  public void simulationPeriodic() { }
 
   // get current robot position
   public Pose2d getPose() {
@@ -124,8 +101,10 @@ public class Drive extends SubsystemBase {
 
   // return current wheel speeds
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    //return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
-    return new DifferentialDriveWheelSpeeds(frontLeft.getSelectedSensorVelocity(), frontRight.getSelectedSensorVelocity());
+    return new DifferentialDriveWheelSpeeds( 
+      frontLeft.getSelectedSensorVelocity(), 
+      frontRight.getSelectedSensorVelocity()
+    );
   }
 
   // reset odometry to given pose
@@ -136,13 +115,10 @@ public class Drive extends SubsystemBase {
 
   // zero encoders
   public void resetEncoders() {
-    /*leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);*/
     frontLeft.setSelectedSensorPosition(0);
     frontRight.setSelectedSensorPosition(0);
   }
 
-  // we might have to make sure setVoltage works the way we expect it to
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     frontLeft.setVoltage(leftVolts);
     frontRight.setVoltage(rightVolts);
@@ -150,24 +126,15 @@ public class Drive extends SubsystemBase {
   }
 
   public double getAverageEncoderDistance() {
-    //return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
     return (frontLeft.getSelectedSensorPosition() + frontRight.getSelectedSensorPosition()) / 2.0;
   }
-
-  /*public CANEncoder getLeftEncoder() {
-    return leftEncoder;
-  }
-
-  public CANEncoder getRightEncoder() {
-    return rightEncoder;
-  }*/
 
   // scales maximum drive speed (0 to 1.0)
   public void setMaxOutput(double maxOutput) {
     diffDrive.setMaxOutput(maxOutput);
   }
 
-  // zero navx
+  // zero navx (doesn't work consistently so we avoid using)
   public void zeroHeading() {
     nav.reset();
   }
@@ -181,7 +148,7 @@ public class Drive extends SubsystemBase {
 
   // return turn rate deg/sec
   public double getTurnRate() {
-    // note: not sure why this is neg but docs said so
+    // negative since navx's positive direction is opposite of the expected/wpilib standard
     return -nav.getRate();
   }
 }

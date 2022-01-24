@@ -24,7 +24,6 @@ public final class Constants {
         public static final int FRONT_RIGHT_ID = 3;
         public static final int BACK_LEFT_ID = 2;
         public static final int BACK_RIGHT_ID = 4;
-        //public static final CANSparkMaxLowLevel.MotorType MOTOR_TYPE = CANSparkMaxLowLevel.MotorType.kBrushless;
 
         // pidf constants - find via characterization
         /*
@@ -39,7 +38,6 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.22899;
         public static final double kPDriveVel = 0.00005;
 
-        // public static final double kPDriveVel = 0;
         public static final double kMaxVoltage = 5;
 
         // odometry constants - drivetrain measurements
@@ -53,7 +51,7 @@ public final class Constants {
                                                                  // theoretically
         public static final double kMaxAccelerationMetersPerSecondSquared = 3; // doesn't really matter
 
-        // ticks to meters conversion factor
+        // ticks to meters conversion factor for falcon 500
         // (total ticks) * (motor rotations/tick) * (wheel rotations/motor rotations) * (meters/wheel rotations)
         public static final double TICKS_TO_METERS = (1.0/2048.0) * (1.0/7.31) * (0.4788);
 
