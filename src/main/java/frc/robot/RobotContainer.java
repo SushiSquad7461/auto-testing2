@@ -18,44 +18,39 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // subsystems
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drive s_drive = new Drive();
 
+  // commands
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  // auto stuff
+  private final Field2d field = new Field2d();
+  public Trajectory exampleTrajectory;
+
   public RobotContainer() {
-    // Configure the button bindings
+    // put field object to dashboard
+    SmartDashboard.putData("field", field);
+    
     configureButtonBindings();
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
+  public Drive getDrive() {
+    return s_drive;
+  }
+
   private void configureButtonBindings() {}
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
 
     // create voltage constraint
@@ -76,18 +71,23 @@ public class RobotContainer {
         .addConstraint(autoVoltageConstraint);
 
     // example trajectory
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    exampleTrajectory = TrajectoryGenerator.generateTrajectory(
       // start at origin
       new Pose2d(0, 0, new Rotation2d(0)),
-      // make s curve
       List.of(
         new Translation2d(1, 1),
         new Translation2d(2, -1)
       ),
+      // make s curve
+      /*List.of(
+        new Translation2d(1, 1),
+        new Translation2d(2, -1)
+      ),*/
       // end 3 meters ahead, facing forward
       new Pose2d(3, 0, new Rotation2d(0)),
       config
     );
+    field.getObject("traj").setTrajectory(exampleTrajectory);
 
     RamseteCommand ramseteCommand = new RamseteCommand(
       exampleTrajectory, 
@@ -109,5 +109,9 @@ public class RobotContainer {
 
     return ramseteCommand.andThen(() -> s_drive.tankDriveVolts(0, 0));
 
+  }
+
+  public void updateRobotPose() {
+    field.setRobotPose(s_drive.getPose());
   }
 }
