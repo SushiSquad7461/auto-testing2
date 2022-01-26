@@ -1,6 +1,6 @@
 {
   "SysId": {
-    "Analysis Type": "Drivetrain",
+    "Analysis Type": "General Mechanism",
     "AnalyzerJSONLocation": "C:\\Users\\evere\\Documents\\robotics\\characterization-files\\sysid_data20220123-134146.json",
     "NetworkTables Settings": {
       "serverTeam": "7461"

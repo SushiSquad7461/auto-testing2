@@ -53,7 +53,11 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+<<<<<<< HEAD
   public void teleopPeriodic() {}
+=======
+  public void teleopPeriodic() { }
+>>>>>>> 897db6a (added choosing autos to code)
 
   @Override
   public void testInit() {
