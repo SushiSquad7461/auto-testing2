@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -32,15 +33,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class RobotContainer {
   // subsystems
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Drive s_drive = new Drive();
+  private final Drive s_drive;
   
 
   // commands
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   // auto stuff
-  private final Ramsete ramsete = new Ramsete(s_drive);
-  private final AutoCommandSelector autoSelector = new AutoCommandSelector(s_drive, ramsete);
+  private final Ramsete ramsete;
+  private final AutoCommandSelector autoSelector;
   private final Field2d field = new Field2d();
   public Trajectory exampleTrajectory;
 
@@ -48,6 +49,10 @@ public class RobotContainer {
   private SendableChooser<SequentialCommandGroup> autoChooser = new SendableChooser<>();;
 
   public RobotContainer() {
+
+    s_drive = new Drive();
+    ramsete = new Ramsete(s_drive);
+    autoSelector = new AutoCommandSelector(s_drive, ramsete);
     // put field object to dashboard
     SmartDashboard.putData("field", field);
 
