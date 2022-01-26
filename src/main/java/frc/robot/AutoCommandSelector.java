@@ -29,14 +29,12 @@ public class AutoCommandSelector {
 
         this.firstTrajectoryMap = new HashMap<SequentialCommandGroup, Trajectory>();
         
-        System.out.println("slkdfa");
         // create command groups
         test = new SequentialCommandGroup(
             ramsete.createRamseteCommand(Ramsete.RamsetePath.FORWARD),
             ramsete.createRamseteCommand(Ramsete.RamsetePath.CURVE));
         forward = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.FORWARD));
         curve = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.CURVE));
-        
 
         // trajectory map
         firstTrajectoryMap.put(test, Ramsete.RamsetePath.FORWARD.getTrajectory());

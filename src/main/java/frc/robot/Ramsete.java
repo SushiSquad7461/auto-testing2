@@ -43,7 +43,6 @@ public class Ramsete {
 
         public Trajectory getTrajectory() {
             try {
-                System.out.println(Filesystem.getDeployDirectory().toPath().resolve(json));
                 Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(json);
                 return TrajectoryUtil.fromPathweaverJson(trajectoryPath);
             } catch (IOException ex) {
@@ -71,8 +70,6 @@ public class Ramsete {
     }
 
     public SequentialCommandGroup createRamseteCommand(RamsetePath path) {
-        System.out.println("jhapod");
-        System.out.println(path);
         return new RamseteCommand(
             path.getTrajectory(),
             drive::getPose,
