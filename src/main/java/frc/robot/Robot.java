@@ -14,6 +14,13 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+<<<<<<< HEAD
+=======
+  /**
+   * This function is run when the robot is first started up and should be used for any
+   * initialization code.
+   */
+>>>>>>> 5ddf68ccbaf868b302ec25cee0b53b31003c0a40
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
@@ -54,10 +61,14 @@ public class Robot extends TimedRobot {
 
   @Override
 <<<<<<< HEAD
+<<<<<<< HEAD
   public void teleopPeriodic() {}
 =======
   public void teleopPeriodic() { }
 >>>>>>> 897db6a (added choosing autos to code)
+=======
+  public void teleopPeriodic() { }
+>>>>>>> 5ddf68ccbaf868b302ec25cee0b53b31003c0a40
 
   @Override
   public void testInit() {
