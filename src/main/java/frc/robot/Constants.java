@@ -38,28 +38,30 @@ public final class Constants {
         public static final double kvVoltSecondsPerMeter = 1.6265;
         public static final double kaVoltSecondsSquaredPerMeter = 0.22899;
         public static final double kPDriveVel = 0.00005;
+        public static final double kIDrive = 0;
+        public static final double kDDrive = 0;
 
         // public static final double kPDriveVel = 0;
-        public static final double kMaxVoltage = 5;
+        public static final double MAX_VOLTAGE = 5;
 
         // odometry constants - drivetrain measurements
-        public static final double kTrackwidthMeters = 0.69; // width between sides of dt
-        public static final DifferentialDriveKinematics kDriveKinematics = 
-            new DifferentialDriveKinematics(kTrackwidthMeters);
+        public static final double TRACK_WIDTH_METERS = 0.69; // width between sides of dt
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = 
+            new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
 
         // path-following constants
-        public static final double kMaxSpeedMetersPerSecond = 3; // set to somewhat below free speed
+        public static final double MAX_SPEED_METERS_PER_SECOND = 3; // set to somewhat below free speed
                                                                  // could increase this to go faster 
                                                                  // theoretically
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3; // doesn't really matter
+        public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 3; // doesn't really matter
 
         // ticks to meters conversion factor
         // (total ticks) * (motor rotations/tick) * (wheel rotations/motor rotations) * (meters/wheel rotations)
         public static final double TICKS_TO_METERS = (1.0/2048.0) * (1.0/7.31) * (0.4788);
 
         // ramsete parameters
-        public static final double kRamseteB = 2;
-        public static final double kRamseteZeta = 0.7;
+        public static final double RAMSETE_B = 2;
+        public static final double RAMSETE_ZETA = 0.7;
     }
 
 }
