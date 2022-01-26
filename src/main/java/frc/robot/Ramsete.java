@@ -28,13 +28,16 @@ public class Ramsete {
     private SimpleMotorFeedforward ramseteFF; 
     
     // path enums
-    public enum Paths {
+    public enum RamsetePath {
         // insert auto paths
-        FORWARD("output/forward.wpilib.json"),
-        CIRCLE("output/circle.wpilib.json"),
-        CURVE("output/curve.wpilib.json");
+        
+        // FORWARD("../../../../../PathWeaver/output/forward.wpilib.json"),
+        // CURVE("../../../../../PathWeaver/output/curve.wpilib.json");
+        FORWARD("forward.wpilib.json"),
+        CURVE("curve.wpilib.json");
+
         private String json;
-        Paths(String json) {
+        RamsetePath(String json) {
             this.json = json;
         }
 
@@ -67,7 +70,9 @@ public class Ramsete {
             Constants.kDrive.MAX_VOLTAGE);
     }
 
-    public SequentialCommandGroup createRamseteCommand(Paths path) {
+    public SequentialCommandGroup createRamseteCommand(RamsetePath path) {
+        System.out.println("jhapod");
+        System.out.println(path);
         return new RamseteCommand(
             path.getTrajectory(),
             drive::getPose,

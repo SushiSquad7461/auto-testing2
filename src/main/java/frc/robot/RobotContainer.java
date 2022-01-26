@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Ramsete.RamsetePath;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -44,18 +45,25 @@ public class RobotContainer {
   public Trajectory exampleTrajectory;
 
   // auto chooser
-  private SendableChooser<SequentialCommandGroup> autoChooser;
+  private SendableChooser<SequentialCommandGroup> autoChooser = new SendableChooser<>();;
 
   public RobotContainer() {
     // put field object to dashboard
     SmartDashboard.putData("field", field);
 
     // set up chooser
-    autoChooser = new SendableChooser<>();
-    autoChooser.setDefaultOption("no auto", null);
+    //autoChooser.setDefaultOption("no auto", null);
+    autoChooser.addOption("forward", autoSelector.forward);
+    autoChooser.addOption("curve", autoSelector.curve);
+    autoChooser.addOption("test", autoSelector.test);
 
     autoSelector.setInitialDrivePose(autoChooser.getSelected());
 
+    for(RamsetePath p: Ramsete.RamsetePath.values()) {
+      field.getObject(p.toString()).setTrajectory(p.getTrajectory());
+    }
+
+    SmartDashboard.putData("auto options", autoChooser);
     
     configureButtonBindings();
   }
