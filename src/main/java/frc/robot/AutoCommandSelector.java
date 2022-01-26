@@ -17,7 +17,6 @@ public class AutoCommandSelector {
 
     // sequential command groups
     public final SequentialCommandGroup test;
-    public final SequentialCommandGroup circle;
     public final SequentialCommandGroup forward;
     public final SequentialCommandGroup curve;
 
@@ -30,20 +29,19 @@ public class AutoCommandSelector {
 
         this.firstTrajectoryMap = new HashMap<SequentialCommandGroup, Trajectory>();
         
+        System.out.println("slkdfa");
         // create command groups
         test = new SequentialCommandGroup(
-            ramsete.createRamseteCommand(Ramsete.Paths.FORWARD),
-            ramsete.createRamseteCommand(Ramsete.Paths.CURVE));
-        circle = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.Paths.CIRCLE));
-        forward = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.Paths.FORWARD));
-        curve = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.Paths.CURVE));
+            ramsete.createRamseteCommand(Ramsete.RamsetePath.FORWARD),
+            ramsete.createRamseteCommand(Ramsete.RamsetePath.CURVE));
+        forward = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.FORWARD));
+        curve = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.CURVE));
         
 
         // trajectory map
-        firstTrajectoryMap.put(test, Ramsete.Paths.FORWARD.getTrajectory());
-        firstTrajectoryMap.put(circle, Ramsete.Paths.CIRCLE.getTrajectory());
-        firstTrajectoryMap.put(forward, Ramsete.Paths.FORWARD.getTrajectory());
-        firstTrajectoryMap.put(curve, Ramsete.Paths.CURVE.getTrajectory());
+        firstTrajectoryMap.put(test, Ramsete.RamsetePath.FORWARD.getTrajectory());
+        firstTrajectoryMap.put(forward, Ramsete.RamsetePath.FORWARD.getTrajectory());
+        firstTrajectoryMap.put(curve, Ramsete.RamsetePath.CURVE.getTrajectory());
     }
 
     public void setInitialDrivePose(SequentialCommandGroup auto) {
