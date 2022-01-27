@@ -2,11 +2,9 @@ package frc.robot;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.SequenceWriter;
-
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Ramsete.RamsetePath;
 import frc.robot.subsystems.Drive;
 
 
@@ -20,15 +18,20 @@ public class AutoCommandSelector {
     public final SequentialCommandGroup forward;
     public final SequentialCommandGroup curve;
 
-    public final Map<SequentialCommandGroup, Trajectory> firstTrajectoryMap;
+    
+    public final RamsetePath[] testPath = { Ramsete.RamsetePath.FORWARD, Ramsete.RamsetePath.CURVE };
+    public final RamsetePath[] forwardPath = { Ramsete.RamsetePath.FORWARD }; 
+    public final RamsetePath[] curvePath = { Ramsete.RamsetePath.CURVE };
+
+    public final Map<SequentialCommandGroup, RamsetePath[]> firstTrajectoryMap;
 
     public AutoCommandSelector(Drive drive, Ramsete ramsete) {
         // instantiate dependencies
         this.drive = drive;
         this.ramsete = ramsete;
 
-        this.firstTrajectoryMap = new HashMap<SequentialCommandGroup, Trajectory>();
-        
+        this.firstTrajectoryMap = new HashMap<SequentialCommandGroup, RamsetePath[]>();
+
         // create command groups
         test = new SequentialCommandGroup(
             ramsete.createRamseteCommand(Ramsete.RamsetePath.FORWARD),
@@ -37,14 +40,14 @@ public class AutoCommandSelector {
         curve = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.CURVE));
 
         // trajectory map
-        firstTrajectoryMap.put(test, Ramsete.RamsetePath.FORWARD.getTrajectory());
-        firstTrajectoryMap.put(forward, Ramsete.RamsetePath.FORWARD.getTrajectory());
-        firstTrajectoryMap.put(curve, Ramsete.RamsetePath.CURVE.getTrajectory());
+        firstTrajectoryMap.put(test, testPath);
+        firstTrajectoryMap.put(forward, forwardPath);
+        firstTrajectoryMap.put(curve, curvePath);
     }
 
     public void setInitialDrivePose(SequentialCommandGroup auto) {
         if(firstTrajectoryMap.containsKey(auto)) {
-            drive.setOdometry(firstTrajectoryMap.get(auto));
+            drive.setOdometry(firstTrajectoryMap.get(auto)[0].getTrajectory());
         }  
     }
 }

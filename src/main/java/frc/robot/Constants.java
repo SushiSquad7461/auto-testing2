@@ -17,6 +17,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
+    public static final class kOI {
+        public static final String TRAJECTORY_NAME = "mayonnaise with natural flavors";
+    }
+
     public static final class kDrive {
         
         // motor constants

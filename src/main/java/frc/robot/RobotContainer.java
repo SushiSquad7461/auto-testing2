@@ -57,16 +57,10 @@ public class RobotContainer {
     SmartDashboard.putData("field", field);
 
     // set up chooser
-    autoChooser.setDefaultOption("no auto", null);
+    autoChooser.setDefaultOption("forward", autoSelector.forward);
     autoChooser.addOption("forward", autoSelector.forward);
     autoChooser.addOption("curve", autoSelector.curve);
     autoChooser.addOption("test", autoSelector.test);
-
-    autoSelector.setInitialDrivePose(autoChooser.getSelected());
-
-    for(RamsetePath p: Ramsete.RamsetePath.values()) {
-      field.getObject(p.toString()).setTrajectory(p.getTrajectory());
-    }
 
     SmartDashboard.putData("auto options", autoChooser);
     
@@ -81,5 +75,17 @@ public class RobotContainer {
 
   public void updateRobotPose() {
     field.setRobotPose(s_drive.getPose());
+  }
+
+  public void setFieldTrajectory() {
+    Trajectory concatTrajectory = new Trajectory();
+    for(RamsetePath p : autoSelector.firstTrajectoryMap.get(autoChooser.getSelected())) {
+      concatTrajectory = concatTrajectory.concatenate(p.getTrajectory());
+    }
+    field.getObject(Constants.kOI.TRAJECTORY_NAME).setTrajectory(concatTrajectory);
+  }
+
+  public void setInitialPose() {
+    autoSelector.setInitialDrivePose(autoChooser.getSelected());
   }
 }
