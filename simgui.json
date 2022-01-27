@@ -1,5 +1,5 @@
 {
-  "NetworkTables": {
+  "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/Drive": "Subsystem",
@@ -29,17 +29,10 @@
         }
       },
       "/SmartDashboard/field": {
-        "mayonnaise with natural flavors": {
-          "width": 0.20000000298023224
-        },
         "window": {
           "visible": true
         }
       }
     }
-  },
-  "NetworkTables Settings": {
-    "mode": "Client",
-    "serverTeam": "7461"
   }
 }

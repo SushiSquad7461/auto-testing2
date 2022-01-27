@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -111,6 +112,10 @@ public class Drive extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(pose, new Rotation2d(-(nav.getYaw()-zeroOffset)));
+  }
+
+  public void setOdometry(Trajectory traj) {
+    odometry.resetPosition(traj.getInitialPose(), traj.getInitialPose().getRotation());
   }
 
   // zero encoders
