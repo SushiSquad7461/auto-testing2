@@ -136,7 +136,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void setOdometry(Trajectory traj) {
-    odometry.resetPosition(traj.getInitialPose(), new Rotation2d(-(nav.getYaw()-zeroOffset)));
+    odometry.resetPosition(traj.getInitialPose(), traj.getInitialPose().getRotation());
   }
 
   // zero encoders
