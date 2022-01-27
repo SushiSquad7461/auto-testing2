@@ -35,7 +35,6 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drive s_drive;
   
-
   // commands
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -53,11 +52,12 @@ public class RobotContainer {
     s_drive = new Drive();
     ramsete = new Ramsete(s_drive);
     autoSelector = new AutoCommandSelector(s_drive, ramsete);
+    
     // put field object to dashboard
     SmartDashboard.putData("field", field);
 
     // set up chooser
-    //autoChooser.setDefaultOption("no auto", null);
+    autoChooser.setDefaultOption("no auto", null);
     autoChooser.addOption("forward", autoSelector.forward);
     autoChooser.addOption("curve", autoSelector.curve);
     autoChooser.addOption("test", autoSelector.test);
