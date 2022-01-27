@@ -2,6 +2,9 @@ package frc.robot;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.databind.introspect.DefaultAccessorNamingStrategy.FirstCharBasedValidator;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Ramsete.RamsetePath;
@@ -17,11 +20,14 @@ public class AutoCommandSelector {
     public final SequentialCommandGroup test;
     public final SequentialCommandGroup forward;
     public final SequentialCommandGroup curve;
+    public final SequentialCommandGroup circle;
+    public final SequentialCommandGroup L;
 
-    
     public final RamsetePath[] testPath = { Ramsete.RamsetePath.FORWARD, Ramsete.RamsetePath.CURVE };
     public final RamsetePath[] forwardPath = { Ramsete.RamsetePath.FORWARD }; 
     public final RamsetePath[] curvePath = { Ramsete.RamsetePath.CURVE };
+    public final RamsetePath[] circlePath = { Ramsete.RamsetePath.CIRCLE };
+    public final RamsetePath[] LPath = { Ramsete.RamsetePath.L };
 
     public final Map<SequentialCommandGroup, RamsetePath[]> firstTrajectoryMap;
 
@@ -38,11 +44,15 @@ public class AutoCommandSelector {
             ramsete.createRamseteCommand(Ramsete.RamsetePath.CURVE));
         forward = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.FORWARD));
         curve = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.CURVE));
-
+        circle = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.CIRCLE));
+        L = new SequentialCommandGroup(ramsete.createRamseteCommand(Ramsete.RamsetePath.L));
+        
         // trajectory map
         firstTrajectoryMap.put(test, testPath);
         firstTrajectoryMap.put(forward, forwardPath);
         firstTrajectoryMap.put(curve, curvePath);
+        firstTrajectoryMap.put(circle, circlePath);
+        firstTrajectoryMap.put(L, LPath);
     }
 
     public void setInitialDrivePose(SequentialCommandGroup auto) {

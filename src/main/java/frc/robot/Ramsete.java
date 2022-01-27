@@ -33,8 +33,10 @@ public class Ramsete {
         
         // FORWARD("../../../../../PathWeaver/output/forward.wpilib.json"),
         // CURVE("../../../../../PathWeaver/output/curve.wpilib.json");
-        FORWARD("forward.wpilib.json"),
-        CURVE("curve.wpilib.json");
+        FORWARD("paths/output/forward.wpilib.json"),
+        CURVE("paths/output/curve.wpilib.json"),
+        CIRCLE("paths/output/circle.wpilib.json"),
+        L("paths/output/L.wpilib.json");
 
         private String json;
         RamsetePath(String json) {
@@ -46,7 +48,7 @@ public class Ramsete {
                 Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(json);
                 return TrajectoryUtil.fromPathweaverJson(trajectoryPath);
             } catch (IOException ex) {
-                return null; 
+                return new Trajectory(); 
             }
         }
     }

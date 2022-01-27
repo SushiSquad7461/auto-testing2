@@ -49,6 +49,7 @@ public class RobotContainer {
 
   public RobotContainer() {
 
+
     s_drive = new Drive();
     ramsete = new Ramsete(s_drive);
     autoSelector = new AutoCommandSelector(s_drive, ramsete);
@@ -61,6 +62,8 @@ public class RobotContainer {
     autoChooser.addOption("forward", autoSelector.forward);
     autoChooser.addOption("curve", autoSelector.curve);
     autoChooser.addOption("test", autoSelector.test);
+    autoChooser.addOption("circle", autoSelector.circle);
+    autoChooser.addOption("L", autoSelector.L);
 
     SmartDashboard.putData("auto options", autoChooser);
     

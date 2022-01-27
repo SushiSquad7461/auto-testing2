@@ -18,7 +18,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
     public static final class kOI {
-        public static final String TRAJECTORY_NAME = "mayonnaise with natural flavors";
+        public static final String TRAJECTORY_NAME = "path";
     }
 
     public static final class kDrive {
@@ -37,9 +37,9 @@ public final class Constants {
         public static final double kPDriveVel = 2.1474; */
 
         // char values for garage
-        public static final double ksVolts = 0.61678;
-        public static final double kvVoltSecondsPerMeter = 1.6265;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.22899;
+        public static final double ksVolts = 0.54849;
+        public static final double kvVoltSecondsPerMeter = 1.6912;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.21572;
         public static final double kPDriveVel = 0.00005;
         public static final double kIDrive = 0;
         public static final double kDDrive = 0;

@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  private boolean hasRun = false;
+
   private RobotContainer m_robotContainer;
 
   @Override
@@ -32,12 +34,14 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     m_robotContainer.setFieldTrajectory();
-    m_robotContainer.setInitialPose();
+    if(!hasRun) { m_robotContainer.setInitialPose(); }
   }
 
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    hasRun = true;
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
